@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Number Guessing Game</title>
+    <style>
+        body {
+            font-family: "Trebuchet", Times, serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background: url('BG.jpg');
+            background-position: center;
+            background-size: cover; ;
+            }
+
+
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+
+        p {
+            color: #555;
+            text-align: center;
+        }
+        input {
+            padding: 8px;
+            font-size: 16px;
+            text-align: center;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #4caf50;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        button:disabled {
+            background-color: #aaa;
+            cursor: not-allowed;
+            text-align: center;
+        }
+
+        #result {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        #retryButton, #logoutButton {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin-top: 10px;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        #retryButton {
+            background-color: #2196f3;
+            color: #fff;
+            border: none;
+            text-align: center;
+        }
+
+        #retryButton:disabled {
+            background-color: #aaa;
+            cursor: not-allowed;
+            text-align: center;
+        }
+
+        #logoutButton {
+            background-color: #ff5733;
+            color: #fff;
+            border: none;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Number Guessing Game</h1>
+
+    <p>Guess a number between 1 and 10:</p>
+
+    <input type="number" id="userGuess" min="1" max="10">
+    <button onclick="checkGuess()">Submit Guess</button>
+
+    <p id="result"></p>
+
+    <button id="retryButton" onclick="resetGame()" disabled>Retry</button>
+    <button id="logoutButton" onclick="logout()">Logout</button>
+
+    <script>
+        let targetNumber = Math.floor(Math.random() * 10) + 1;
+        let chancesLeft = 3;
+
+        function checkGuess() {
+            const userGuessInput = document.getElementById('userGuess');
+            const userGuess = parseInt(userGuessInput.value);
+
+            if (isNaN(userGuess) || userGuess < 1 || userGuess > 10) {
+                alert('Please enter a number between 1 and 10.');
+                return;
+            }
+
+            if (userGuess === targetNumber) {
+                displayResult('Congratulations! You guessed the correct number.');
+                disableInputAndButton();
+            } else {
+                chancesLeft--;
+
+                if (chancesLeft === 0) {
+                    displayResult(`Sorry, you're out of chances. The correct number was ${targetNumber}.`);
+                    disableInputAndButton(true); // Enable retry button
+                } else {
+                    const hint = userGuess < targetNumber ? 'higher' : 'lower';
+                    displayResult(`Incorrect! Try a ${hint} number. You have ${chancesLeft} ${chancesLeft === 1 ? 'chance' : 'chances'} left.`);
+                }
+            }
+        }
+
+        function displayResult(message) {
+            const resultDisplay = document.getElementById('result');
+            resultDisplay.textContent = message;
+        }
+
+        function disableInputAndButton(disable = true) {
+            const userGuessInput = document.getElementById('userGuess');
+            const submitButton = document.querySelector('button');
+            const retryButton = document.getElementById('retryButton');
+
+            userGuessInput.disabled = disable;
+            submitButton.disabled = disable;
+            retryButton.disabled = !disable;
+        }
+
+        function resetGame() {
+            chancesLeft = 3;
+            targetNumber = Math.floor(Math.random() * 10) + 1;
+
+            document.getElementById('userGuess').value = '';
+            document.getElementById('result').textContent = '';
+
+            disableInputAndButton(false);
+        }
+
+        function logout() {
+            // Redirect to the login form (replace 'login.html' with your actual login page)
+            window.location.href = 'index.html';
+        }
+    </script>
+
+</body>
+</html>
